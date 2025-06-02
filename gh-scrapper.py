@@ -6,7 +6,9 @@ from tqdm import tqdm
 
 # === CONFIGURATION ===
 GITHUB_USERNAME = "kunatastic" 
-GITHUB_TOKEN = os.environ.get("ACCESSTOKEN")
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+
+print(len(GITHUB_TOKEN))
 
 BASE_URL = "https://api.github.com"
 HEADERS = {
