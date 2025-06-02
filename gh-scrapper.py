@@ -5,7 +5,7 @@ from collections import defaultdict
 from tqdm import tqdm
 
 # === CONFIGURATION ===
-GITHUB_USERNAME = "kunatastic"
+GITHUB_USERNAME = os.environ.get("GITHUB_USERNAME")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 EMAIL_ID = os.environ.get("EMAILID")
 
