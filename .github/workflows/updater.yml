@@ -1,0 +1,48 @@
+name: Weekly Commit Scraper
+
+# on:
+#   schedule:
+#     - cron: "30 0 * * 1" # Every Monday at 06:00 UTC
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, '#d2p') }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false # We'll use a custom token for pushing
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run commit scraper script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python gh-scrapper.py
+
+      - name: Commit and push .mdx files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_EMAIL: ${{ secrets.MY_EMAIL }}
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "$COMMITTER_EMAIL"
+          git add data/*.mdx
+          if ! git diff --cached --quiet; then
+            git commit -m "Update commit logs for $(date +'%Y-%m-%d')"
+            git push origin HEAD:${{ github.ref_name }}
+          else
+            echo "No changes to commit"
+          fi
