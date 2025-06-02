@@ -1,15 +1,16 @@
 import os
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from collections import defaultdict
 from tqdm import tqdm
 
 # === CONFIGURATION ===
-GITHUB_USERNAME = "kunatastic" 
+GITHUB_USERNAME = "kunatastic"
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 EMAIL_ID = os.environ.get("EMAILID")
 
-print(len(GITHUB_TOKEN), len(EMAIL_ID))
+if not GITHUB_TOKEN or not EMAIL_ID:
+    raise EnvironmentError("GITHUB_TOKEN and EMAILID must be set in environment variables.")
 
 BASE_URL = "https://api.github.com"
 HEADERS = {
@@ -43,7 +44,7 @@ def get_commits(repo_full_name, since_date):
     commits = []
     page = 1
     while True:
-        url = f"{BASE_URL}/repos/{owner}/{repo}/commits"
+        url = f"{BASE_URL}/repos/{owner}/{requests.utils.quote(repo, safe='')}/commits"
         params = {
             "author": GITHUB_USERNAME,
             "since": since_date.isoformat(),
@@ -63,8 +64,8 @@ def get_commits(repo_full_name, since_date):
 def save_commits_to_mdx(commits_by_repo):
     output_dir = "./data"
     os.makedirs(output_dir, exist_ok=True)
-    filename = os.path.join(output_dir, datetime.now().strftime("%Y-%m-%d") + ".mdx")
-    lines = [f"# GitHub Commits - {datetime.now().date()}\n"]
+    filename = os.path.join(output_dir, datetime.now(timezone.utc).strftime("%Y-%m-%d") + ".mdx")
+    lines = [f"# GitHub Commits - {datetime.now(timezone.utc).date()}\n"]
 
     # Sort repos by latest commit date (desc)
     sorted_repos = sorted(
@@ -92,7 +93,7 @@ def save_commits_to_mdx(commits_by_repo):
 
 # === MAIN ===
 def main():
-    since = datetime.now() - timedelta(days=7)
+    since = datetime.now(timezone.utc) - timedelta(days=7)
     repos = get_all_repos()
     commits_by_repo = defaultdict(list)
 
@@ -100,7 +101,7 @@ def main():
     for i, repo in enumerate(tqdm(repos, desc="Fetching commits", unit="repo"), start=1):
         full_name = repo["full_name"]
         print(f"[{i}/{total}] Fetching commits from {full_name}")
-        
+
         commits = get_commits(full_name, since)
         if commits:
             commits_by_repo[(repo["full_name"], repo["private"])].extend(commits)

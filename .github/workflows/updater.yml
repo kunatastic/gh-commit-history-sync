@@ -34,9 +34,11 @@ jobs:
         run: python gh-scrapper.py
 
       - name: Commit and push .mdx files
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESSTOKEN }}
         run: |
           git config user.name "${{ github.actor }}"
-          git config user.email "$EMAILID"
+          git config user.email "${{ secrets.EMAILID }}"
           git add data/*.mdx
           if ! git diff --cached --quiet; then
             git commit -m "Update commit logs for $(date +'%Y-%m-%d')"
