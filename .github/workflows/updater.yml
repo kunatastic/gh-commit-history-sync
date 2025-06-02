@@ -12,10 +12,10 @@ on:
 jobs:
   run-scraper:
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '#d2p') }}
     env:
       GITHUB_TOKEN: ${{ secrets.ACCESSTOKEN }}
       EMAILID: ${{ secrets.EMAILID }}
+    if: ${{ contains(github.event.head_commit.message, '#d2p') }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
