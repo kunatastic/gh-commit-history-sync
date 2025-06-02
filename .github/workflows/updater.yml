@@ -48,3 +48,4 @@ jobs:
             git push https://kunatastic:${{ secrets.ACCESSTOKEN }}@github.com/${{ github.repository }} HEAD:main
           else
             echo "No changes to commit"
+          fi
