@@ -89,7 +89,7 @@ def save_commits_to_mdx(commits_by_repo):
 
 # === MAIN ===
 def main():
-    since = datetime.utcnow() - timedelta(days=7)
+    since = datetime.now() - timedelta(days=7)
     repos = get_all_repos()
     commits_by_repo = defaultdict(list)
 
