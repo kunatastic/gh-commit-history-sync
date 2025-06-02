@@ -13,6 +13,9 @@ jobs:
   run-scraper:
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.head_commit.message, '#d2p') }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.ACCESSTOKEN }}
+      EMAILID: ${{ secrets.EMAILID }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -28,14 +31,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run commit scraper script
-        env:
-          GH_PAT: ${{ secrets.ACCESSTOKEN }}
         run: python gh-scrapper.py
 
       - name: Commit and push .mdx files
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESSTOKEN }}
-          EMAILID: ${{ secrets.EMAILID }}
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "$EMAILID"
