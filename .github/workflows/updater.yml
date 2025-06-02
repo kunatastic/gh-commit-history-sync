@@ -29,6 +29,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Debug secrets
+        run: |
+          echo "Checking secrets:"
+          echo "GITHUB_TOKEN is set: ${GITHUB_TOKEN:+yes}"
+          echo "EMAILID is set: ${EMAILID:+yes}"
+
       - name: Run commit scraper script
         run: python gh-scrapper.py
 

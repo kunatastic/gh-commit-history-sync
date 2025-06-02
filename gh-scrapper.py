@@ -10,8 +10,12 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 EMAIL_ID = os.environ.get("EMAILID")
 
 if not GITHUB_TOKEN or not EMAIL_ID:
-    raise EnvironmentError("GITHUB_TOKEN and EMAILID must be set in environment variables.")
+    print("❌ Missing environment variables:")
+    print(f"  GITHUB_TOKEN: {'✅' if GITHUB_TOKEN else '❌'}")
+    print(f"  EMAILID: {'✅' if EMAIL_ID else '❌'}")
+    exit(1)
 
+    
 BASE_URL = "https://api.github.com"
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}",
