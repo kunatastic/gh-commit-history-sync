@@ -1,26 +1,25 @@
 name: Weekly Commit Scraper
 
-# on:
-#   schedule:
-#     - cron: "30 0 * * 1" # Every Monday at 06:00 UTC
-
 on:
   push:
     branches:
       - main
+  schedule:
+    - cron: "30 0 * * 1" # Every Monday at 6:00 AM IST (which is 0:30 UTC)
 
 jobs:
   run-scraper:
+    if: ${{ github.event_name == 'schedule' || contains(github.event.head_commit.message, '#d2p') }}
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.ACCESSTOKEN }}
       EMAILID: ${{ secrets.EMAILID }}
-    if: ${{ contains(github.event.head_commit.message, '#d2p') }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          persist-credentials: false # We'll use a custom token for pushing
+          persist-credentials: false # Use custom PAT for push
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -34,15 +33,12 @@ jobs:
         run: python gh-scrapper.py
 
       - name: Commit and push .mdx files
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESSTOKEN }}
         run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ secrets.EMAILID }}"
+          git config user.name kunatastic
+          git config user.email "$EMAILID"
           git add data/*.mdx
           if ! git diff --cached --quiet; then
             git commit -m "Update commit logs for $(date +'%Y-%m-%d')"
-            git push origin HEAD:${{ github.ref_name }}
+            git push https://kunatastic:${{ secrets.ACCESSTOKEN }}@github.com/${{ github.repository }} HEAD:main
           else
             echo "No changes to commit"
-          fi
