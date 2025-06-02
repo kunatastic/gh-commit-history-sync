@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 # === CONFIGURATION ===
 GITHUB_USERNAME = "kunatastic" 
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+GITHUB_TOKEN = os.environ.get("GH_PAT")
 
 print(len(GITHUB_TOKEN))
 

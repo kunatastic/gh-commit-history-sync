@@ -29,12 +29,12 @@ jobs:
 
       - name: Run commit scraper script
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.ACCESSTOKEN }}
         run: python gh-scrapper.py
 
       - name: Commit and push .mdx files
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACCESSTOKEN }}
           EMAILID: ${{ secrets.EMAILID }}
         run: |
           git config user.name "${{ github.actor }}"
