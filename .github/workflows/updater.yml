@@ -44,11 +44,8 @@ jobs:
           git config user.name "$GITHUB_USERNAME"
           git config user.email "$EMAILID"
 
-          # Get current date & time
-          NOW=$(date +'%Y-%m-%d %H:%M:%S')
-
-          # Get last Monday at 00:00:00 (start of the day)
-          LAST_MONDAY=$(date -d "last monday 00:00:00" +'%Y-%m-%d %H:%M:%S')
+          NOW=$(date +'%A, %d %B %Y %H:%M')
+          LAST_MONDAY=$(date -d "last monday 00:00:00" +'%A, %d %B %Y %H:%M')
 
           git add data/*.md
 

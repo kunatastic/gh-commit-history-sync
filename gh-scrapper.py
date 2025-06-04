@@ -65,11 +65,20 @@ def get_commits(repo_full_name, since_date):
         page += 1
     return commits
 
+def get_last_monday_date():
+    now_utc = datetime.now(timezone.utc)
+    # weekday(): Monday = 0, Sunday = 6
+    days_since_monday = now_utc.weekday()  # 0 if today is Monday
+    last_monday = now_utc - timedelta(days=days_since_monday)
+    return last_monday.date()
+
 def save_commits_to_mdx(commits_by_repo):
     output_dir = "./data"
     os.makedirs(output_dir, exist_ok=True)
-    filename = os.path.join(output_dir, datetime.now(timezone.utc).strftime("%Y-%m-%d") + ".md")
-    lines = [f"# GitHub Commits - {datetime.now(timezone.utc).date()}\n"]
+
+    last_monday_date = get_last_monday_date()
+    filename = os.path.join(output_dir, last_monday_date.strftime("%Y-%m-%d") + ".md")
+    lines = [f"# GitHub Commits - Week starting {last_monday_date}\n"]
 
     # Sort repos by latest commit date (desc)
     sorted_repos = sorted(
