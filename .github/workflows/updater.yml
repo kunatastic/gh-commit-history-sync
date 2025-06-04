@@ -39,11 +39,11 @@ jobs:
       - name: Run commit scraper script
         run: python gh-scrapper.py
 
-      - name: Commit and push .mdx files
+      - name: Commit and push .md files
         run: |
           git config user.name "$GITHUB_USERNAME"
           git config user.email "$EMAILID"
-          git add data/*.mdx
+          git add data/*.md
           if ! git diff --cached --quiet; then
             git commit -m "Update commit logs for $(date +'%Y-%m-%d')"
             git push https://"$GITHUB_USERNAME":${{ secrets.ACCESSTOKEN }}@github.com/${{ github.repository }} HEAD:main

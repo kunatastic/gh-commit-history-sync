@@ -68,7 +68,7 @@ def get_commits(repo_full_name, since_date):
 def save_commits_to_mdx(commits_by_repo):
     output_dir = "./data"
     os.makedirs(output_dir, exist_ok=True)
-    filename = os.path.join(output_dir, datetime.now(timezone.utc).strftime("%Y-%m-%d") + ".mdx")
+    filename = os.path.join(output_dir, datetime.now(timezone.utc).strftime("%Y-%m-%d") + ".md")
     lines = [f"# GitHub Commits - {datetime.now(timezone.utc).date()}\n"]
 
     # Sort repos by latest commit date (desc)
