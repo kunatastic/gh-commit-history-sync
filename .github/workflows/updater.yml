@@ -43,9 +43,17 @@ jobs:
         run: |
           git config user.name "$GITHUB_USERNAME"
           git config user.email "$EMAILID"
+
+          # Get current date & time
+          NOW=$(date +'%Y-%m-%d %H:%M:%S')
+
+          # Get last Monday at 00:00:00 (start of the day)
+          LAST_MONDAY=$(date -d "last monday 00:00:00" +'%Y-%m-%d %H:%M:%S')
+
           git add data/*.md
+
           if ! git diff --cached --quiet; then
-            git commit -m "Update commit logs for $(date +'%Y-%m-%d')"
+            git commit -m "📝📅 Weekly commit sync. Duration: $LAST_MONDAY to $NOW"
             git push https://"$GITHUB_USERNAME":${{ secrets.ACCESSTOKEN }}@github.com/${{ github.repository }} HEAD:main
           else
             echo "No changes to commit"
