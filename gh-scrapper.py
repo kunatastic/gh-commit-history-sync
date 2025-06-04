@@ -98,6 +98,7 @@ def save_commits_to_mdx(commits_by_repo):
 # === MAIN ===
 def main():
     since = datetime.now(timezone.utc) - timedelta(days=7)
+    since_start_of_day = since.replace(hour=0, minute=0, second=0, microsecond=0)
     repos = get_all_repos()
     commits_by_repo = defaultdict(list)
 
@@ -106,7 +107,7 @@ def main():
         full_name = repo["full_name"]
         print(f"[{i}/{total}] Fetching commits from {full_name}")
 
-        commits = get_commits(full_name, since)
+        commits = get_commits(full_name, since_start_of_day)
         if commits:
             commits_by_repo[(repo["full_name"], repo["private"])].extend(commits)
 
