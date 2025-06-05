@@ -40,8 +40,8 @@ jobs:
           git config user.name "$GITHUB_USERNAME"
           git config user.email "$EMAILID"
 
-          NOW=$(date +'%A, %d %B %Y %H:%M')
-          LAST_MONDAY=$(date -d "last monday 00:00:00" +'%A, %d %B %Y %H:%M')
+          NOW=$(TZ="Asia/Kolkata" date +'%A, %d %B %Y %H:%M')
+          LAST_MONDAY=$(TZ="Asia/Kolkata" date -d "last monday 00:00:00" +'%A, %d %B %Y %H:%M')
 
           git add data/*.md
 
